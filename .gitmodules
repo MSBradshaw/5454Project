@@ -1,3 +1,6 @@
 [submodule "pyrwr"]
 	path = pyrwr
 	url = https://github.com/jinhongjung/pyrwr.git
+[submodule "DIAMOnD"]
+	path = DIAMOnD
+	url = https://github.com/dinaghiassian/DIAMOnD.git
