@@ -127,12 +127,16 @@ def score_network_rwr(edgelist, gene_sets, results_name, is_pheknowlater, interm
             ranked_gene_names['rank'] += list(range(r_df.shape[0]))
             ranked_gene_names['disease'] += [disease] * r_df.shape[0]
             ranked_gene_names['is_target'] += [x in targets for x in r_df['node_name']]
+
+            # get the number of genes in the disease gene set
+            num_targets_in_network = sum(t in list(r_df['node_name']) for t in targets)
+
             # the top X we want scores for
             top_xs = [500, 100, 50, 25, 10, 0]
             for i in range(len(top_xs[:-1])):
                 top_overlap = len(list(set(r_df.iloc[top_xs[i + 1]:top_xs[i], 2]) & set(targets)))
                 scores[str(top_xs[i]) + ' count'].append((top_overlap))
-                scores[str(top_xs[i]) + ' %'].append(top_overlap / len(targets))
+                scores[str(top_xs[i]) + ' %'].append(top_overlap / num_targets_in_network)
             scores['disease'].append(disease)
         single_df = pd.DataFrame(scores)
         # get the mean of each of the iterations for this disease
@@ -149,6 +153,12 @@ def score_network_rwr(edgelist, gene_sets, results_name, is_pheknowlater, interm
     pd.DataFrame(ranked_gene_names).to_csv(results_name + '_ranked_res.csv')
 
 
-score_network_rwr(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]=='True', sys.argv[5])
+# Edgelists/pheknowlater_edgelist_gene_symbols_no_snps_clean.tsv
+# example_disease_set.txt
+# delete.tsv
+# True
+# delete_edgelist.tsv
+if __name__ == '__main__':
+    score_network_rwr(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]=='True', sys.argv[5])
 
 
