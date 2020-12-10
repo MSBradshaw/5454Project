@@ -3,3 +3,6 @@ Edgelists/*
 MessyData/*
 .DS_Store
 __pycache__
+Embeddings/*txt
+Embeddings/*emb
+*.zip

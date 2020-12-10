@@ -69,19 +69,18 @@ disease_genes = disease_gene_sets[list(disease_gene_sets.keys())[0]]
 nodes = partition(disease_genes, 2)
 seeds, targets = nodes[0], nodes[1]
 
-
 counts = {}
 for disease in disease_gene_sets.keys():
     disease_genes = disease_gene_sets[disease]
     nodes = partition(disease_genes, 2)
     seeds, targets = nodes[0], nodes[1]
-    for i,seed in enumerate(seeds):
-        print(seed,str(i),':',str(len(seeds)))
+    for i, seed in enumerate(seeds):
+        print(seed, str(i), ':', str(len(seeds)))
         for target in targets:
             try:
                 path = nx.shortest_path(G, seed, target)
             except nx.exception.NodeNotFound:
-                print('Not in graph',seed,'or',target)
+                print('Not in graph', seed, 'or', target)
             for i in range(len(path) - 1):
                 p = G[path[i]][path[i + 1]]['predicate']
                 if p in counts:
@@ -89,3 +88,51 @@ for disease in disease_gene_sets.keys():
                 else:
                     counts[p] = 1
     # break
+pickle.dump(counts, open('counts.pickle', 'wb'))
+counts = pickle.load(open('counts.pickle', 'rb'))
+
+name_mapping = {'http://purl.obolibrary.org/obo/RO_0000056': 'participates_in',
+                'http://purl.obolibrary.org/obo/RO_0002160': 'evolutionarily related to',
+                'http://www.w3.org/2000/01/rdf-schema#subClassOf': 'sub class of',
+                'http://purl.obolibrary.org/obo/RO_0003302': 'causes or contributes to condition',
+                'http://purl.obolibrary.org/obo/RO_0002511': 'Inverse of transcribed from',
+                'http://purl.obolibrary.org/obo/RO_0001025': 'located in',
+                'http://purl.obolibrary.org/obo/RO_0002205': 'has gene product',
+                'http://purl.obolibrary.org/obo/RO_0002606': 'is substance that treats',
+                'http://purl.obolibrary.org/obo/RO_0002434': 'interacts with',
+                'http://purl.obolibrary.org/obo/RO_0002200': 'has phenotype',
+                'http://purl.obolibrary.org/obo/BFO_0000050': 'part of',
+                'http://purl.obolibrary.org/obo/RO_0000052': 'inheres in',
+                'http://purl.obolibrary.org/obo/CLO_0000179': ' is disease model for',
+                'http://purl.obolibrary.org/obo/RO_0002435': 'genetically interacts with',
+                'http://purl.obolibrary.org/obo/RO_0004019': 'disease has basis in',
+                'http://purl.obolibrary.org/obo/CLO_0000015': 'derives from patient having disease',
+                'http://purl.obolibrary.org/obo/RO_0002436': 'molecularly interacts with',
+                'http://purl.obolibrary.org/obo/RO_0002573': 'has modifier',
+                'http://purl.obolibrary.org/obo/IDO_0000664': 'has_material_basis_in',
+                'http://purl.obolibrary.org/obo/so#has_part': 'has part',
+                'http://purl.obolibrary.org/obo/so#non_functional_homolog_of': 'non_functional_homolog_of',
+                'http://purl.obolibrary.org/obo/so#member_of': 'member of',
+                'http://purl.obolibrary.org/obo/RO_0002314': 'inheres in part of',
+                'http://purl.obolibrary.org/obo/CLO_0000167': 'has disease'}
+
+named_counts = {name_mapping[x]: counts[x] for x in counts.keys()}
+
+import matplotlib.pyplot as plt
+
+df = {'name': list(named_counts.keys()), 'count': list(named_counts.values())}
+
+plt.hist(df['name'], df['count'])
+
+import seaborn as sns
+
+g = sns.barplot(df['name'], df['count'])
+g.set_yscale("log")
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.ylabel('Count')
+plt.xlabel('Predicate')
+plt.savefig('predicate_counts.png')
+plt.show()
+
+

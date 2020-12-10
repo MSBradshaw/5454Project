@@ -199,8 +199,8 @@ def score_network_diamond(edgelist, gene_sets, results_name, is_pheknowlater):
     results_df.to_csv(results_name)
     pd.DataFrame(ranked_gene_names).to_csv(results_name + '_ranked_res.csv')
 
-
-score_network_diamond(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4] == 'True')
+if __name__ == '__main__':
+    score_network_diamond(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4] == 'True')
 
 # produce jobs for runnign diamond on fiji
 
