@@ -3,7 +3,7 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 
-res_files = ['d_hi_res.csv','d_pkl_res.csv','d_reactome_res.csv','d_string_res.csv','rwr_hi_results.csv','rwr_pkl_results.csv','rwr_reactome_results.csv','rwr_string_results.csv']
+res_files = ['d_hi_res.csv','d_pkl_res.csv','d_reactome_res.csv','d_string_res.csv','rwr_hi_results.csv','rwr_pkl_results.csv','rwr_reactome_results.csv','rwr_string_results.csv','mcl_hi_res_mcl.csv','mcl_pkl_res_mcl.csv','mcl_react_res_mcl.csv','mcl_string_res_mcl.csv']
 df = None
 for file in res_files:
     temp = pd.read_csv(file)
